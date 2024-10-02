@@ -2,7 +2,7 @@ import { Router } from 'express';
 const router = Router();
 import { sign, verify } from 'jsonwebtoken';
 import { findOne, create, findById } from '../models/User';
-import bcrypt from 'bcryptjs';
+import validateUser from '../middleware/validateMiddleware';
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -12,7 +12,7 @@ const generateToken = (id) => {
 };
 
 // POST /api/users/register - Register a new user
-router.post('/register', async (req, res) => {
+router.post('/register', validateUser, async (req, res) => {
   const { name, email, password } = req.body;
 
   try {

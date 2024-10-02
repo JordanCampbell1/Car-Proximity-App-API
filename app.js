@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import connectDB from './config/db';
 import triggerRoutes from './routes/triggerRoutes';
 import reminderRoutes from './routes/reminderRoutes';
+import errorHandler from './middleware/errorMiddleware';
 
 config();
 connectDB();
@@ -14,6 +15,9 @@ app.use(json());
 app.use('/api/users', userRoutes);
 app.use('/api/triggers', triggerRoutes);
 app.use('/api/reminders', reminderRoutes);
+
+app.use(errorHandler);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
