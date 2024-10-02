@@ -11,6 +11,7 @@ const app = express();
 app.use(json());
 
 // Routes
+app.use('/api/users', userRoutes);
 app.use('/api/triggers', triggerRoutes);
 app.use('/api/reminders', reminderRoutes);
 
