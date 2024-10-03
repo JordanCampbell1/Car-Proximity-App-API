@@ -1,6 +1,3 @@
-Here's a sample `INSTALLATION.md` file that outlines the steps for a developer to install and run the proximity-based car assistant app:
-
-```markdown
 # Installation Guide for Proximity-Based Car Assistant API
 
 This document provides step-by-step instructions for setting up and running the Proximity-Based Car Assistant API on your local machine.
