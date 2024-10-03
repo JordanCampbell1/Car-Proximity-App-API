@@ -1,88 +1,78 @@
-# Installation Guide for Proximity-Based Car Assistant API
+# Installation Instructions for the Car Proximity App API
 
-This document provides step-by-step instructions for setting up and running the Proximity-Based Car Assistant API on your local machine.
+Follow the steps below to set up and run the Car Proximity App API on your local machine.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
+Ensure you have the following installed on your computer:
 
-- [Node.js](https://nodejs.org/) (version 14 or higher)
-- [MongoDB](https://www.mongodb.com/try/download/community) (make sure it's running on your local machine)
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- [MongoDB](https://www.mongodb.com/) (installed and running)
 
-## Step 1: Clone the Repository
+## Step-by-Step Installation
 
-1. Open your terminal (Command Prompt, PowerShell, or Terminal).
-2. Clone the repository using the following command:
+1. **Clone the Repository**
+
+   Clone the repository to your local machine using the following command:
 
    ```bash
-   git clone https://github.com/yourusername/Car-Proximity-App-API.git
+   git clone <repository-url>
    ```
 
-   Replace `yourusername` with your GitHub username.
+2. **Navigate to the Project Directory**
 
-3. Change to the project directory:
+   Change your directory to the project folder:
 
    ```bash
    cd Car-Proximity-App-API
    ```
 
-## Step 2: Install Dependencies
+3. **Install Dependencies**
 
-1. Make sure you are in the project directory (where `package.json` is located).
-2. Run the following command to install the required packages:
+   Install the required dependencies by running:
 
    ```bash
    npm install
    ```
 
-   This will install the dependencies listed in `package.json`.
+4. **Create a `.env` File**
 
-## Step 3: Set Up Environment Variables
+   Create a `.env` file in the root directory of the project and add the following configuration:
 
-1. Create a new file in the root of the project named `.env`.
-2. Add the following lines to the `.env` file:
-
-   ```env
+   ```plaintext
    PORT=3000
    MONGO_URI=mongodb://localhost:27017/proximityCarDB
    JWT_SECRET=jwt_secret_key
    ```
 
-   These environment variables configure the server port, MongoDB connection string, and JWT secret key.
+5. **Set Up the Database**
 
-## Step 4: Start the MongoDB Server
+   To set up the database and seed it with test data, run the following command:
 
-Make sure your MongoDB server is running. You can do this by starting it from the command line:
+   ```bash
+   npm run setup
+   ```
 
-```bash
-mongod
-```
+   This command will execute the `setup.js` script, which connects to the database and runs the `seed.js` file to populate it with initial data.
 
-## Step 5: Run the Application
+6. **Run the Server**
 
-1. In your terminal, make sure you are still in the project directory.
-2. Use the following command to start the server with nodemon:
+   After the setup is complete, you can run the server using:
 
    ```bash
    npm run dev
    ```
 
-   This command will start the server in development mode, and it will automatically restart when you make changes to the code.
+   Your server should now be running on [http://localhost:3000](http://localhost:3000).
 
-## Step 6: Access the API
+## Accessing the API
 
-Once the server is running, you can access the API in your browser or via an API client like Postman:
+You can access the API and verify that the server is running by navigating to the following URL in your web browser:
 
-- Open your browser and go to: [http://localhost:3000/health](http://localhost:3000/health)
-
-You should see a message indicating that the server is running.
+[http://localhost:3000/health](http://localhost:3000/health)
 
 ## Additional Notes
 
-- If you encounter any issues, ensure that all dependencies are installed correctly and that MongoDB is running.
-- You can modify the `.env` file as needed for different configurations (e.g., different MongoDB URIs).
+- If you encounter any issues during the setup, ensure that MongoDB is running and accessible at the specified URI.
+- Make sure to check your console for any error messages, which can provide guidance for troubleshooting.
 
----
-
-That's it! You have successfully installed and set up the Proximity-Based Car Assistant API.
-```
