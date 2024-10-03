@@ -14,6 +14,7 @@ const generateToken = (id) => {
 
 // POST /api/users/register - Register a new user
 router.post('/register', validateUser, async (req, res) => {
+
   const { name, email, password } = req.body;
 
   try {
@@ -25,7 +26,7 @@ router.post('/register', validateUser, async (req, res) => {
     }
 
     // Create new user
-    const user = await create({
+    const user = await User.create({
       name,
       email,
       password, // Will be hashed in the pre-save hook
@@ -73,7 +74,7 @@ router.get('/profile', async (req, res) => {
   try {
     // Get user details from token (normally you'd check this via middleware)
     const token = req.headers.authorization?.split(' ')[1];
-
+    
     if (!token) {
       return res.status(401).json({ message: 'Not authorized, no token' });
     }
