@@ -1,8 +1,9 @@
 import { Router } from 'express';
 const router = Router();
-import { sign, verify } from 'jsonwebtoken';
-import { findOne, create, findById } from '../models/User';
-import validateUser from '../middleware/validateMiddleware';
+import pkg from 'jsonwebtoken';
+const { sign, verify } = pkg;
+import User from '../models/User.js';
+import validateUser from '../middleware/validateMiddleware.js';
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -17,7 +18,7 @@ router.post('/register', validateUser, async (req, res) => {
 
   try {
     // Check if user already exists
-    const userExists = await findOne({ email });
+    const userExists = await User.findOne({ email });
 
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
@@ -48,7 +49,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // Find user by email
-    const user = await findOne({ email });
+    const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
       res.json({
@@ -65,6 +66,8 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
+//maybe use the auth middleware instead of implementing the auth here
 // GET /api/users/profile - Get logged-in user's profile
 router.get('/profile', async (req, res) => {
   try {
@@ -79,7 +82,7 @@ router.get('/profile', async (req, res) => {
     const decoded = verify(token, process.env.JWT_SECRET);
 
     // Find user by ID
-    const user = await findById(decoded.id).select('-password');
+    const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

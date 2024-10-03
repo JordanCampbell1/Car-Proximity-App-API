@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { genSalt, hash, compare } from 'bcryptjs';
+import pkg from 'bcryptjs';
+const { genSalt, hash, compare } = pkg;
 
 const UserSchema = new Schema({
   name: {

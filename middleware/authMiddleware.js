@@ -1,5 +1,5 @@
 import { verify } from 'jsonwebtoken';
-import { findById } from '../models/User';
+import { findById } from '../models/User.js';
 
 // Middleware to check if the user is authenticated
 const protect = async (req, res, next) => {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import Trigger, { find } from '../models/Trigger';
+import Trigger from '../models/Trigger.js';
 
 // POST /api/triggers - Create a new trigger
 router.post('/', async (req, res) => {
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 // GET /api/triggers/:userId - Get all triggers for a user
 router.get('/:userId', async (req, res) => {
   try {
-    const triggers = await find({ userId: req.params.userId });
+    const triggers = await Trigger.find({ userId: req.params.userId });
     res.status(200).json(triggers);
   } catch (err) {
     res.status(500).json({ error: err.message });

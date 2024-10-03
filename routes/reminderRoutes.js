@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import Reminder, { find } from '../models/Reminder';
+import Reminder from '../models/Reminder.js';
 
 // POST /api/reminders - Create a new reminder
 router.post('/', async (req, res) => {
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 // GET /api/reminders/:userId - Get reminders for a user
 router.get('/:userId', async (req, res) => {
   try {
-    const reminders = await find({ userId: req.params.userId });
+    const reminders = await Reminder.find({ userId: req.params.userId });
     res.status(200).json(reminders);
   } catch (err) {
     res.status(500).json({ error: err.message });
