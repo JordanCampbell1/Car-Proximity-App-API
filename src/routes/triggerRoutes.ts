@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import Trigger from '../models/Trigger.js';
+import Trigger from '../models/Trigger';
 
 // POST /api/triggers - Create a new trigger
 router.post('/', async (req, res) => {

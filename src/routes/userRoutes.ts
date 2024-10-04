@@ -2,8 +2,8 @@ import { Router, Response, Request } from 'express';
 const router = Router();
 import pkg from 'jsonwebtoken';
 const { sign, verify } = pkg;
-import User from '../models/User.js';
-import validateUser from '../middleware/authMiddleware.js';
+import User from '../models/User';
+import validateUser from '../middleware/authMiddleware';
 import { Types } from 'mongoose';
 import { error } from 'console';
 

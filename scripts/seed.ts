@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import Reminder from '../models/Reminder.js';
-import Trigger from '../models/Trigger.js';
-import User from '../models/User.js';
-import connectDB from '../config/db.js';
+import Reminder from '../src/models/Reminder';
+import Trigger from '../src/models/Trigger';
+import User from '../src/models/User';
+import connectDB from '../src/config/db';
 
 async function seedDatabase() {
   try {
@@ -12,7 +12,10 @@ async function seedDatabase() {
     console.log('Connected to the database');
 
     // Drop the database if it exists
-    await mongoose.connection.db.dropDatabase();
+    const ProximityAPI_DB = mongoose.connection.db;
+    if(ProximityAPI_DB){
+      await ProximityAPI_DB.dropDatabase();    
+    }
 
     // Seed data
     const user = await User.create({ 

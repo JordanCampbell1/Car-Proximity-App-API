@@ -1,4 +1,6 @@
-const errorHandler = (err, req, res, next) => {
+import { NextFunction, Response, Request } from "express";
+
+const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode; // Set status code
     res.status(statusCode).json({
       message: err.message,

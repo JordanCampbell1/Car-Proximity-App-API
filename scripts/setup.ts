@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import dotenv from 'dotenv';
-import connectDB from '../config/db.js';
+import connectDB from '../src/config/db';
 
 const execPromise = promisify(exec);
 // Load environment variables from .env file
@@ -27,7 +27,7 @@ async function checkMongoDB() {
 async function runSeedScript() {
   try {
     // Execute the seed.js script
-    await execPromise('node scripts/seed.js');
+    await execPromise('ts-node scripts/seed.ts');
     console.log('Seed script executed successfully.');
   } catch (error) {
     console.error('Error executing seed script:', error);

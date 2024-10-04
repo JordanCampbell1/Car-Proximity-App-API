@@ -3,18 +3,22 @@
   "version": "1.0.0",
   "description": "Car Proximity App",
   "main": "dist/app.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/app.js",
     "dev": "ts-node src/app.ts",
-    "setup": "node scripts/setup.js",
+    "setup": "ts-node scripts/setup.ts",
     "build": "tsc",
     "watch": "tsc --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/JordanCampbell1/Car-Proximity-App-API.git"
+},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",

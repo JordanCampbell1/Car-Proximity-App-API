@@ -1,5 +1,5 @@
 import { JwtPayload, verify } from 'jsonwebtoken';
-import User from '../models/User.js';
+import User from '../models/User';
 import { NextFunction } from 'express';
 
 // Middleware to check if the user is authenticated

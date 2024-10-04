@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import Reminder from '../models/Reminder.js';
+import Reminder from '../models/Reminder';
 
 // POST /api/reminders - Create a new reminder
 router.post('/', async (req, res) => {
