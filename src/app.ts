@@ -1,10 +1,10 @@
 import express, { json } from 'express';
 import { config } from 'dotenv';
-import connectDB from '../config/db.js';
-import triggerRoutes from '../routes/triggerRoutes.js';
-import reminderRoutes from '../routes/reminderRoutes.js';
-import errorHandler from '../middleware/errorMiddleware.js';
-import userRoutes from '../routes/userRoutes.js';
+import connectDB from './config/db.js';
+import triggerRoutes from './routes/triggerRoutes.js';
+import reminderRoutes from './routes/reminderRoutes.js';
+import errorHandler from './middleware/errorMiddleware.js';
+import userRoutes from './routes/userRoutes.js';
 
 config();
 await connectDB();

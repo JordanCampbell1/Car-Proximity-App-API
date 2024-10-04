@@ -10,6 +10,7 @@ router.post('/', async (req, res) => {
     await newReminder.save();
     res.status(201).json(newReminder);
   } catch (err) {
+    if(err instanceof Error)
     res.status(500).json({ error: err.message });
   }
 });
@@ -20,6 +21,7 @@ router.get('/:userId', async (req, res) => {
     const reminders = await Reminder.find({ userId: req.params.userId });
     res.status(200).json(reminders);
   } catch (err) {
+    if(err instanceof Error)
     res.status(500).json({ error: err.message });
   }
 });

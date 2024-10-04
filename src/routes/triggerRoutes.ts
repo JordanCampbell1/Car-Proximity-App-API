@@ -10,6 +10,7 @@ router.post('/', async (req, res) => {
     await newTrigger.save();
     res.status(201).json(newTrigger);
   } catch (err) {
+    if(err instanceof Error)
     res.status(500).json({ error: err.message });
   }
 });
@@ -20,6 +21,7 @@ router.get('/:userId', async (req, res) => {
     const triggers = await Trigger.find({ userId: req.params.userId });
     res.status(200).json(triggers);
   } catch (err) {
+    if(err instanceof Error)
     res.status(500).json({ error: err.message });
   }
 });

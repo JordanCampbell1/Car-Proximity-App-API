@@ -1,19 +1,27 @@
-import { Router } from 'express';
+import { Router, Response, Request } from 'express';
 const router = Router();
 import pkg from 'jsonwebtoken';
 const { sign, verify } = pkg;
 import User from '../models/User.js';
-import validateUser from '../middleware/validateMiddleware.js';
+import validateUser from '../middleware/authMiddleware.js';
+import { Types } from 'mongoose';
+import { error } from 'console';
 
 // Generate JWT Token
-const generateToken = (id) => {
-  return sign({ id }, process.env.JWT_SECRET, {
+const generateToken = (id: Types.ObjectId) => {
+  const jwtSecret = process.env.JWT_SECRET;
+
+  if(!jwtSecret){
+    throw new Error("JWT SECRET is not defined in environment variables");
+  }
+
+  return sign({ id }, jwtSecret, {
     expiresIn: '30d',
   });
 };
 
 // POST /api/users/register - Register a new user
-router.post('/register', validateUser, async (req, res) => {
+router.post('/register', validateUser, async (req: Request, res: Response): Promise<void> => {
 
   const { name, email, password } = req.body;
 
@@ -22,7 +30,8 @@ router.post('/register', validateUser, async (req, res) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      res.status(400).json({ message: 'User already exists' });
+      return;
     }
 
     // Create new user
@@ -40,12 +49,13 @@ router.post('/register', validateUser, async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({ error: error.message });
   }
 });
 
 // POST /api/users/login - Authenticate user and get token
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
@@ -63,6 +73,7 @@ router.post('/login', async (req, res) => {
       res.status(401).json({ message: 'Invalid email or password' });
     }
   } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({ error: error.message });
   }
 });
@@ -70,23 +81,25 @@ router.post('/login', async (req, res) => {
 
 //maybe use the auth middleware instead of implementing the auth here
 // GET /api/users/profile - Get logged-in user's profile
-router.get('/profile', async (req, res) => {
+router.get('/profile', async (req: Request, res: Response): Promise<void> => {
   try {
     // Get user details from token (normally you'd check this via middleware)
     const token = req.headers.authorization?.split(' ')[1];
     
     if (!token) {
-      return res.status(401).json({ message: 'Not authorized, no token' });
+      res.status(401).json({ message: 'Not authorized, no token' });
+      return;
     }
 
     // Decode the token
-    const decoded = verify(token, process.env.JWT_SECRET);
+    const decoded = verify(token, process.env.JWT_SECRET as string) as { id: string };
 
     // Find user by ID
     const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: 'User not found' });
+      return;
     }
 
     res.json({
@@ -95,6 +108,7 @@ router.get('/profile', async (req, res) => {
       email: user.email,
     });
   } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({ error: error.message });
   }
 });

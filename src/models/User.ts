@@ -1,8 +1,16 @@
 import { Schema, model } from 'mongoose';
-import pkg from 'bcryptjs';
-const { genSalt, hash, compare } = pkg;
+import bcrypt from 'bcryptjs';
+const { genSalt, hash, compare } = bcrypt;
 
-const UserSchema = new Schema({
+// Define an interface for the User document
+interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+  matchPassword(enteredPassword: string): Promise<boolean>;
+}
+
+const UserSchema = new Schema<IUser>({
   name: {
     type: String,
     required: true,
@@ -19,11 +27,12 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+},
+{
+  timestamps: true
+}
+);
+
 
 // Hash the password before saving
 UserSchema.pre('save', async function (next) {
@@ -36,8 +45,8 @@ UserSchema.pre('save', async function (next) {
 });
 
 // Method to check if the entered password is correct
-UserSchema.methods.matchPassword = async function (enteredPassword) {
+UserSchema.methods.matchPassword = async function (enteredPassword: string) {
   return await compare(enteredPassword, this.password);
 };
 
-export default model('User', UserSchema);
+export default model<IUser>('User', UserSchema);
