@@ -53,7 +53,7 @@ Ensure you have the following installed on your computer:
    npm run setup
    ```
 
-   This command will execute the `setup.js` script, which connects to the database and runs the `seed.js` file to populate it with initial data.
+   This command will execute the `setup.ts` script, which connects to the database and runs the `seed.ts` file to populate it with initial data.
 
 6. **Run the Server**
 
