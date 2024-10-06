@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "4358bb78-2655-407d-8488-53344b71943b",
-		"name": "Car Proximity App",
+		"_postman_id": "caa505f0-91af-4598-90aa-947d2b8ce333",
+		"name": "Car Proximity App Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "34149118"
+		"_exporter_id": "33501503"
 	},
 	"item": [
 		{
@@ -178,15 +178,14 @@
 						"type": "text"
 					},
 					{
-						"key": "",
-						"value": "",
-						"type": "text",
-						"disabled": true
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"New Gym\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0369, 38.9072]\r\n  },\r\n  \"radius\": 300,\r\n  \"placeType\": \"gym\"\r\n}\r\n",
+					"raw": "{\r\n  \"name\": \"New Gym\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0369, 38.9072]\r\n  },\r\n  \"radius\": 300,\r\n  \"placeType\": \"gym\",\r\n  \"userId\": \"6701df8d356df43d825dfc6e\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -240,7 +239,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:3000/api/triggers/66fe3fcfdb2514033a362b45",
+					"raw": "http://127.0.0.1:3000/api/locations/{{Location ID}}",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -251,8 +250,8 @@
 					"port": "3000",
 					"path": [
 						"api",
-						"triggers",
-						"66fe3fcfdb2514033a362b45"
+						"locations",
+						"{{Location ID}}"
 					]
 				}
 			},
@@ -264,7 +263,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:3000/api/locations/user/6701f969d74f5951132ea0a1",
+					"raw": "http://127.0.0.1:3000/api/locations/user/{{User ID}}",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -277,7 +276,7 @@
 						"api",
 						"locations",
 						"user",
-						"6701f969d74f5951132ea0a1"
+						"{{User ID}}"
 					]
 				}
 			},
@@ -287,9 +286,15 @@
 			"name": "Delete Location By ID",
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://127.0.0.1:3000/api/locations/6701f9e849edbeb3a4b95469",
+					"raw": "http://127.0.0.1:3000/api/locations/{{Location ID}}",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -301,7 +306,7 @@
 					"path": [
 						"api",
 						"locations",
-						"6701f9e849edbeb3a4b95469"
+						"{{Location ID}}"
 					]
 				}
 			},
@@ -320,7 +325,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"userId\": \"66fe3fcfdb2514033a362b45\",\r\n    \"message\": \"do some hiking\",\r\n    \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [43534534,345345345]  // Example: New York City (Longitude, Latitude)\r\n    }\r\n\r\n}",
+					"raw": "{\r\n    \"userId\": \"6701df8d356df43d825dfc6e\",\r\n    \"message\": \"do some hiking\",\r\n    \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [43534534,345345345]  // Example: New York City (Longitude, Latitude)\r\n    }\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -351,7 +356,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:3000/api/reminders/66fe3fcfdb2514033a362b45",
+					"raw": "http://127.0.0.1:3000/api/reminders/{{User ID}}",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -363,7 +368,7 @@
 					"path": [
 						"api",
 						"reminders",
-						"66fe3fcfdb2514033a362b45"
+						"{{User ID}}"
 					]
 				}
 			},
@@ -382,7 +387,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"parkedLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0311, 38.8950] // Close coordinates\r\n  },\r\n  \"frequency\": 1\r\n}\r\n",
+					"raw": "{\r\n  \"userId\": \"6701df8d356df43d825dfc6e\",\r\n  \"parkedLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0311, 38.8950]\r\n  },\r\n  \"frequency\": 1\r\n  \r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -402,6 +407,13 @@
 					"path": [
 						"api",
 						"parkedHistory"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -419,7 +431,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:3000/api/parkedhistory",
+					"raw": "http://localhost:3000/api/parkedhistory/user/{{User ID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -427,7 +439,9 @@
 					"port": "3000",
 					"path": [
 						"api",
-						"parkedhistory"
+						"parkedhistory",
+						"user",
+						"{{User ID}}"
 					]
 				}
 			},
@@ -439,7 +453,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/parkedhistory/670207fdeed549e27fd7f2d8\n",
+					"raw": "http://localhost:3000/api/parkedhistory/{{ParkedHistoryID}}\n",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -448,7 +462,7 @@
 					"path": [
 						"api",
 						"parkedhistory",
-						"670207fdeed549e27fd7f2d8\n"
+						"{{ParkedHistoryID}}\n"
 					]
 				}
 			},
@@ -460,7 +474,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/parkedhistory/670207fdeed549e27fd7f2d8",
+					"raw": "http://localhost:3000/api/parkedhistory/{{ParkedHistoryID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -469,7 +483,7 @@
 					"path": [
 						"api",
 						"parkedhistory",
-						"670207fdeed549e27fd7f2d8"
+						"{{ParkedHistoryID}}"
 					]
 				}
 			},

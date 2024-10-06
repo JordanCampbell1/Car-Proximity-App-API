@@ -19,7 +19,14 @@ router.post('/', async (req, res) => {
 router.get('/:userId', async (req, res) => {
   try {
     const reminders = await Reminder.find({ userId: req.params.userId });
+
+    if(!reminders.length){
+      res.status(404).json({error: "No Reminders found for this user"});
+      return;
+    }
+
     res.status(200).json(reminders);
+
   } catch (err) {
     if(err instanceof Error)
     res.status(500).json({ error: err.message });

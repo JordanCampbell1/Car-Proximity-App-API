@@ -5,8 +5,8 @@ import protect from '../middleware/authMiddleware';
 const router = Router();
 
 // POST /api/locations - Create a new location (user must be logged in)
-router.post('/', protect, async (req: any, res: Response) => {
-  const { name, location, radius, placeType } = req.body;
+router.post('/', protect, async (req: Request, res: Response) => {
+  const { name, location, radius, placeType, userId } = req.body;
 
   try {
     const newLocation = new Location({
@@ -14,7 +14,7 @@ router.post('/', protect, async (req: any, res: Response) => {
       location,
       radius,
       placeType,
-      userId: req.user._id,  // Use the logged-in user's ID
+      userId,  // Use the logged-in user's ID
     });
 
     await newLocation.save();
@@ -58,6 +58,12 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 router.get('/user/:userId', async (req: Request, res: Response) => {
   try {
     const locations = await Location.find({ userId: req.params.userId });
+
+    if(!locations){
+      res.status(404).json({error : "No locations found for this user"});
+      return;
+    }
+
     res.status(200).json(locations);
   } catch (err) {
     if (err instanceof Error) {
@@ -67,7 +73,7 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
 });
 
 // DELETE /api/locations/:id - Delete a specific location by ID
-router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+router.delete('/:id', protect, async (req: Request, res: Response): Promise<void> => {
     try {
       const deletedLocation = await Location.findByIdAndDelete(req.params.id);
       if (!deletedLocation) {
