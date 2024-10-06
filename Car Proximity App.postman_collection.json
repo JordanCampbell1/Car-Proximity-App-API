@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1d3aeb1d-b283-4615-98ac-3acb733814e9",
+		"_postman_id": "4358bb78-2655-407d-8488-53344b71943b",
 		"name": "Car Proximity App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33501503"
+		"_exporter_id": "34149118"
 	},
 	"item": [
 		{
@@ -188,7 +188,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Trigger",
+			"name": "Create Location",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -200,7 +200,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"userId\": \"66fe3fcfdb2514033a362b45\",\r\n    \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [8655, 5678]  // Example: New York City (Longitude, Latitude)\r\n    },\r\n    \"action\": \"buy something i guess\",\r\n    \"radius\": 569\r\n\r\n}",
+					"raw": "{\r\n  \"name\": \"New Gym\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0369, 38.9072]\r\n  },\r\n  \"radius\": 300,\r\n  \"placeType\": \"gym\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -208,7 +208,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:3000/api/triggers",
+					"raw": "http://127.0.0.1:3000/api/locations",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -219,14 +219,37 @@
 					"port": "3000",
 					"path": [
 						"api",
-						"triggers"
+						"locations"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get Triggers",
+			"name": "Get All Locations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/api/locations",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Location By ID",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -244,6 +267,55 @@
 						"api",
 						"triggers",
 						"66fe3fcfdb2514033a362b45"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Locations By User ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/api/locations/user/6701f969d74f5951132ea0a1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"locations",
+						"user",
+						"6701f969d74f5951132ea0a1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Location By ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/api/locations/6701f9e849edbeb3a4b95469",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"locations",
+						"6701f9e849edbeb3a4b95469"
 					]
 				}
 			},
