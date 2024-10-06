@@ -3,6 +3,7 @@ import Reminder from '../src/models/Reminder';
 import Location from '../src/models/Location';
 import User from '../src/models/User';
 import connectDB from '../src/config/db';
+import ParkedHistory from '../src/models/ParkedHistory';
 
 async function seedDatabase() {
   try {
@@ -65,7 +66,27 @@ async function seedDatabase() {
         placeType: 'store', 
       },
     ]);
-    
+
+    // Create parked history entries
+    await ParkedHistory.create([
+      {
+        userId: user._id,
+        parkedLocation: {
+          type: 'Point',
+          coordinates: [-77.0369, 38.9072], // Example parked location coordinates
+        },
+        frequency: 3, // Example frequency
+      },
+      {
+        userId: user._id,
+        parkedLocation: {
+          type: 'Point',
+          coordinates: [-77.0421, 38.8951], 
+        },
+        frequency: 2,
+      },
+    ]);
+
     console.log('Seed data created successfully');
   } catch (error) {
     console.error('Error seeding database:', error);
