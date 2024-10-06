@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import Reminder from '../src/models/Reminder';
-import Trigger from '../src/models/Trigger';
+import Location from '../src/models/Location';
 import User from '../src/models/User';
 import connectDB from '../src/config/db';
 
@@ -43,27 +43,29 @@ async function seedDatabase() {
       },
     ]);
 
-    await Trigger.create([
+    await Location.create([
       {
-        userId: user._id,
+        userId: user._id, 
+        name: 'Extreme Fitness',
         location: {
           type: 'Point',
-          coordinates: [-77.0369, 38.9072], // Example coordinates
+          coordinates: [-77.0369, 38.9072], // Example coordinates (longitude, latitude)
         },
-        action: 'Send reminder',
-        radius: 300,
+        radius: 500,
+        placeType: 'gym', 
       },
       {
-        userId: user._id,
+        userId: user._id, 
+        name: 'HiLo',
         location: {
           type: 'Point',
-          coordinates: [-77.0421, 38.8951], // Example coordinates
+          coordinates: [-77.0421, 38.8951], // Example coordinates (longitude, latitude)
         },
-        action: 'Launch navigation',
         radius: 500,
+        placeType: 'store', 
       },
     ]);
-
+    
     console.log('Seed data created successfully');
   } catch (error) {
     console.error('Error seeding database:', error);
