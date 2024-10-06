@@ -69,6 +69,22 @@
 		},
 		{
 			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save token\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.environment.set(\"token\", jsonData.token); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -113,52 +129,16 @@
 			},
 			"request": {
 				"auth": {
-					"type": "jwt",
-					"jwt": [
-						{
-							"key": "payload",
-							"value": "{\r\n    \"id\": \"66fe3fcfdb2514033a362b45\"\r\n}",
-							"type": "string"
-						},
-						{
-							"key": "secret",
-							"value": "jwt_secret_key",
-							"type": "string"
-						},
-						{
-							"key": "header",
-							"value": "{}",
-							"type": "string"
-						},
-						{
-							"key": "isSecretBase64Encoded",
-							"value": false,
-							"type": "boolean"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "algorithm",
-							"value": "HS256",
-							"type": "string"
-						},
-						{
-							"key": "headerPrefix",
-							"value": "Bearer",
-							"type": "string"
-						},
-						{
-							"key": "queryParamKey",
-							"value": "token",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "",
@@ -196,6 +176,12 @@
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"body": {
@@ -378,6 +364,112 @@
 						"api",
 						"reminders",
 						"66fe3fcfdb2514033a362b45"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Parked History",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"parkedLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0311, 38.8950] // Close coordinates\r\n  },\r\n  \"frequency\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/api/parkedHistory",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"parkedHistory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Parked History For User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDIwNDhhNjNlMDc3NDc2MjE2MDA1NyIsImlhdCI6MTcyODE4NTQ4NCwiZXhwIjoxNzMwNzc3NDg0fQ.nJwhSTXhjaygWASq-twKy_gpD0yXM04555hPnzg5o78",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/parkedhistory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"parkedhistory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Parked History By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/parkedhistory/670207fdeed549e27fd7f2d8\n",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"parkedhistory",
+						"670207fdeed549e27fd7f2d8\n"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Parked History By ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/parkedhistory/670207fdeed549e27fd7f2d8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"parkedhistory",
+						"670207fdeed549e27fd7f2d8"
 					]
 				}
 			},
