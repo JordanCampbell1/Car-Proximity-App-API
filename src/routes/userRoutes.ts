@@ -3,12 +3,12 @@ const router = Router();
 import pkg from 'jsonwebtoken';
 const { sign, verify } = pkg;
 import User from '../models/User';
-import validateUser from '../middleware/authMiddleware';
+import validateUser from '../middleware/validateMiddleware';
 import { Types } from 'mongoose';
 import { error } from 'console';
 
 // Generate JWT Token
-const generateToken = (id: Types.ObjectId) => {
+const generateToken = (id: Types.ObjectId): string => {
   const jwtSecret = process.env.JWT_SECRET;
 
   if(!jwtSecret){
