@@ -1,7 +1,7 @@
 import express, { json } from 'express';
 import { config } from 'dotenv';
 import connectDB from './config/db';
-import triggerRoutes from './routes/triggerRoutes';
+import locationRoutes from './routes/locationRoutes';
 import reminderRoutes from './routes/reminderRoutes';
 import errorHandler from './middleware/errorMiddleware';
 import userRoutes from './routes/userRoutes';
@@ -17,7 +17,7 @@ const startServer = async (): Promise<void> => {
 
   // Routes
   app.use('/api/users', userRoutes);
-  app.use('/api/triggers', triggerRoutes);
+  app.use('/api/locations', locationRoutes);
   app.use('/api/reminders', reminderRoutes);
 
   // Health check route
