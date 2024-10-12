@@ -6,6 +6,7 @@ import reminderRoutes from './routes/reminderRoutes';
 import errorHandler from './middleware/errorMiddleware';
 import userRoutes from './routes/userRoutes';
 import parkedHistoryRoutes from './routes/parkedHistoryRoutes'
+import DrivingHistoryRoutes from './routes/drivingHistoryRoutes';
 
 config();
 
@@ -21,7 +22,8 @@ const startServer = async (): Promise<void> => {
   app.use('/api/locations', locationRoutes);
   app.use('/api/reminders', reminderRoutes);
   app.use('/api/parkedHistory', parkedHistoryRoutes);
-  
+  app.use('/api/drivingHistory', DrivingHistoryRoutes);
+
   // Health check route
   app.get('/health', (req, res) => {
     res.status(200).json({
