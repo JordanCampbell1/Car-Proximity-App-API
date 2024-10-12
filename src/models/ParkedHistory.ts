@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 // Define the sub-schema for GeoJSON data (Parked Location)
-const GeoLocationSchema = new Schema({
+export const GeoLocationSchema = new Schema({
   type: {
     type: String, 
     enum: ['Point'], // Only 'Point' is allowed for GeoJSON
