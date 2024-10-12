@@ -4,6 +4,7 @@ import Location from '../src/models/Location';
 import User from '../src/models/User';
 import connectDB from '../src/config/db';
 import ParkedHistory from '../src/models/ParkedHistory';
+import DrivingHistory from '../src/models/DrivingHistory';
 
 async function seedDatabase() {
   try {
@@ -84,6 +85,26 @@ async function seedDatabase() {
           coordinates: [-77.0421, 38.8951], 
         },
         frequency: 2,
+      },
+    ]);
+
+     // Create driving history entries
+     await DrivingHistory.create([
+      {
+        userId: user._id,
+        drivingLocation: {
+          type: 'Point',
+          coordinates: [-77.0311, 38.8950], // Example driving location coordinates
+        },
+        frequency: 1, // Example frequency
+      },
+      {
+        userId: user._id,
+        drivingLocation: {
+          type: 'Point',
+          coordinates: [-77.0421, 38.8951], 
+        },
+        frequency: 2, 
       },
     ]);
 
