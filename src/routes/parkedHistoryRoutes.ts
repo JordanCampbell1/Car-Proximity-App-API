@@ -2,24 +2,9 @@ import { Router, Request, Response } from 'express';
 import ParkedHistory from '../models/ParkedHistory';
 import protect from '../middleware/authMiddleware';
 import { Error } from 'mongoose';
+import { getDistance } from '../utils/geoUtils'; // Import the distance function
 
 const router = Router();
-
-// Formula to calc distance between two coordinates in meters
-function getDistance(coord1: number[], coord2: number[]): number {
-  const R: number = 6371000; // Radius of the Earth in meters
-  const lat1: number = coord1[1] * (Math.PI / 180); // Convert latitude from degrees to radians
-  const lat2: number = coord2[1] * (Math.PI / 180); // Convert latitude from degrees to radians
-  const deltaLat: number = (coord2[1] - coord1[1]) * (Math.PI / 180);
-  const deltaLon: number = (coord2[0] - coord1[0]) * (Math.PI / 180);
-
-  const a: number = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) *
-    Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
-
-  const c: number = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in meters
-}
 
 // POST /api/parkedHistory - Create or update a parked history entry
 router.post('/', protect, async (req: Request, res: Response): Promise<void> => {
