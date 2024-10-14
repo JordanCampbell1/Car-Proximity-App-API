@@ -29,7 +29,7 @@ router.post('/', protect, async (req: AuthenticatedRequest, res: Response): Prom
 router.patch('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { id } = req.params;
   const { drivingLocation }: { drivingLocation: { type: string; coordinates: number[] } } = req.body; // New driving location to be added
-  const proximityThreshold = Number(process.env.PROXIMITY_THRESHOLD) || 500;
+  const proximityThreshold = Number(process.env.PROXIMITY_THRESHOLD) || 100;
 
   try {
     const drivingHistory = await DrivingHistory.findById(id);
