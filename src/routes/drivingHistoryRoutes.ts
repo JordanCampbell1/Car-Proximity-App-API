@@ -1,17 +1,17 @@
 import { Router, Request, Response } from 'express';
 import DrivingHistory from '../models/DrivingHistory';
-import protect from '../middleware/authMiddleware'; 
-import { getDistance } from '../utils/geoUtils'; 
+import protect, { AuthenticatedRequest } from '../middleware/authMiddleware'; 
+import { isWithinProximity } from '../utils/proximityUtils';
 
 const router = Router();
 
-// POST /api/driving-history - Create a new driving history entry
-router.post('/', protect, async (req: Request, res: Response): Promise<void> => {
-  const { drivingLocation, frequency, userId }: { drivingLocation: { type: string; coordinates: number[] }; frequency?: number, userId: string } = req.body; // Define the structure of drivingLocation
+// POST /api/drivinghistory - Create a new driving history entry for the logged-in user
+router.post('/', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { drivingLocation, frequency }: { drivingLocation: { type: string; coordinates: number[] }; frequency?: number } = req.body;
 
   try {
     const newDrivingHistory = new DrivingHistory({
-      userId: userId, // Use the logged-in user's ID
+      userId: req.user._id, // Use the logged-in user's ID
       drivingLocation,
       frequency: frequency ?? 1, // Default to 1 if not provided
     });
@@ -25,8 +25,8 @@ router.post('/', protect, async (req: Request, res: Response): Promise<void> => 
   }
 });
 
-// PATCH /api/driving-history/:id - Update driving history entry with a new location
-router.patch('/:id', protect, async (req: Request, res: Response): Promise<void> => {
+// PATCH /api/drivinghistory/:id - Update driving history entry with a new location
+router.patch('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { id } = req.params;
   const { drivingLocation }: { drivingLocation: { type: string; coordinates: number[] } } = req.body; // New driving location to be added
   const proximityThreshold = 50; // Define proximity threshold in meters
@@ -34,16 +34,26 @@ router.patch('/:id', protect, async (req: Request, res: Response): Promise<void>
   try {
     const drivingHistory = await DrivingHistory.findById(id);
     if (!drivingHistory) {
-        res.status(404).json({ message: 'Driving history not found' });
-        return;
+      res.status(404).json({ message: 'Driving history not found' });
+      return;
     }
 
-    const distance = getDistance(drivingHistory.drivingLocation.coordinates, drivingLocation.coordinates);
-    if (distance <= proximityThreshold) {
-      // If the distance is within the threshold, increment frequency
-      drivingHistory.frequency += 1; // Increment frequency
+    // Ensure the logged-in user is the owner of the driving history
+    if (drivingHistory.userId.toString() !== req.user._id.toString()) {
+      res.status(403).json({ message: 'You are not authorized to update this entry' });
+      return;
+    }
+
+    // Extract coordinates from the current and new driving locations
+    const [currentLat, currentLng] = drivingHistory.drivingLocation.coordinates;
+    const [newLat, newLng] = drivingLocation.coordinates;
+
+    // Use isWithinProximity to check if the new location is within proximity of the existing one
+    if (isWithinProximity(currentLat, currentLng, newLat, newLng, proximityThreshold)) {
+      // If the new location is within proximity, increment frequency
+      drivingHistory.frequency += 1;
     } else {
-      // If no close location found, update the drivingLocation to the new one
+      // If not within proximity, update the drivingLocation to the new one
       drivingHistory.drivingLocation = {
         type: 'Point',
         coordinates: drivingLocation.coordinates,
@@ -59,10 +69,10 @@ router.patch('/:id', protect, async (req: Request, res: Response): Promise<void>
   }
 });
 
-// GET /api/driving-history - Get all driving history for the logged-in user
-router.get('/', protect, async (req: Request, res: Response): Promise<void> => {
+// GET /api/drivinghistory - Get all driving history for the logged-in user
+router.get('/', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const drivingHistories = await DrivingHistory.find({ userId: req.params.userId });
+    const drivingHistories = await DrivingHistory.find({ userId: req.user._id }); // Use the logged-in user's ID
     res.status(200).json(drivingHistories);
   } catch (err) {
     if (err instanceof Error) {
@@ -71,12 +81,12 @@ router.get('/', protect, async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// GET /api/driving-history/trends - Analyze trends based on driving history
-router.get('/trends', protect, async (req: Request, res: Response): Promise<void> => {
+// GET /api/drivinghistory/trends - Analyze trends based on driving history for the logged-in user
+router.get('/trends', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const trends = await DrivingHistory.aggregate([
       { 
-        $match: { userId: req.params.userId } 
+        $match: { userId: req.user._id } // Match only the logged-in user's history
       },
       {
         $group: {
@@ -98,9 +108,9 @@ router.get('/trends', protect, async (req: Request, res: Response): Promise<void
   }
 });
 
-// GET /api/driving-history/optimized-route - Optimize route through set locations
-router.get('/optimized-route', protect, async (req: Request, res: Response): Promise<void> => {
-  const { locations } = req.query; // Expecting an array of location coordinates
+// GET /api/drivinghistory/optimized-route - Optimize route through set locations
+router.get('/optimized-route', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { locations } = req.query; // array of location coordinates ?
 
   res.status(200).json({
     message: 'Optimized route based on the provided locations',
