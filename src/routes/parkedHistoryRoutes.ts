@@ -10,11 +10,7 @@ const router = Router();
 router.post('/', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { parkedLocation, frequency }: { parkedLocation: { type: string, coordinates: number[] }, frequency?: number } = req.body;
   
-  if(!process.env.PROXIMITYTHRESHOLD){
-    throw new Error("Proximity threshold was not set in the Environment variables");
-  }
-  
-  const proximityThreshold: number = parseInt(process.env.PROXIMITYTHRESHOLD); // Example proximity threshold in meters
+  const proximityThreshold = Number(process.env.PROXIMITY_THRESHOLD) || 500;
 
   try {
     const userId = req.user._id; // Use the logged-in user's ID
