@@ -1,6 +1,19 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
-const ReminderSchema = new Schema({
+// Define the interface for the Reminder document
+interface IReminder extends Document {
+  userId: Schema.Types.ObjectId;
+  message: string;
+  location: {
+    type: string;
+    coordinates: [number, number]; // Longitude, Latitude
+  };
+  radius: number;
+  isCompleted: boolean;
+  createdAt: Date;
+}
+
+const ReminderSchema = new Schema<IReminder>({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -11,11 +24,19 @@ const ReminderSchema = new Schema({
     required: true,
   },
   location: {
-    type: { type: String, default: 'Point' }, // GeoJSON Point
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true, // GeoJSON Point
+    },
     coordinates: {
-      type: [Number],
+      type: [Number], // [longitude, latitude]
       required: true,
     },
+  },
+  radius: {
+    type: Number, // Proximity radius in meters
+    required: true,
   },
   isCompleted: {
     type: Boolean,
@@ -27,4 +48,7 @@ const ReminderSchema = new Schema({
   },
 });
 
-export default model('Reminder', ReminderSchema);
+// Create a 2dsphere index for geospatial queries
+ReminderSchema.index({ location: '2dsphere' });
+
+export default model<IReminder>('Reminder', ReminderSchema);
