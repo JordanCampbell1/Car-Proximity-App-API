@@ -1,14 +1,14 @@
 import { Router, Request, Response } from 'express';
 import ParkedHistory from '../models/ParkedHistory';
-import protect from '../middleware/authMiddleware';
+import protect, { AuthenticatedRequest } from '../middleware/authMiddleware';
 import { Error } from 'mongoose';
-import { getDistance } from '../utils/geoUtils'; // Import the distance function
+import { isWithinProximity } from '../utils/proximityUtils'; // Import the proximity check function
 
 const router = Router();
 
 // POST /api/parkedHistory - Create or update a parked history entry
-router.post('/', protect, async (req: Request, res: Response): Promise<void> => {
-  const { parkedLocation, frequency, userId }: { parkedLocation: {type: string, coordinates: number[] }, frequency?: number, userId: string } = req.body;
+router.post('/', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { parkedLocation, frequency }: { parkedLocation: { type: string, coordinates: number[] }, frequency?: number } = req.body;
   
   if(!process.env.PROXIMITYTHRESHOLD){
     throw new Error("Proximity threshold was not set in the Environment variables");
@@ -17,6 +17,8 @@ router.post('/', protect, async (req: Request, res: Response): Promise<void> => 
   const proximityThreshold: number = parseInt(process.env.PROXIMITYTHRESHOLD); // Example proximity threshold in meters
 
   try {
+    const userId = req.user._id; // Use the logged-in user's ID
+
     // Check if a parked history entry with the same coordinates or close exists
     const existingEntry = await ParkedHistory.find({
       userId: userId,
@@ -26,16 +28,17 @@ router.post('/', protect, async (req: Request, res: Response): Promise<void> => 
 
     if (existingEntry.length) {
       for (const entry of existingEntry) {
-        const distance: number = getDistance(
-          entry.parkedLocation?.coordinates, //can use '!' due to the existing entry check above => existingEntry.length
-          parkedLocation.coordinates
-        );
-        if (distance <= proximityThreshold) {
+        const [entryLat, entryLng] = entry.parkedLocation?.coordinates;
+        const [parkedLat, parkedLng] = parkedLocation.coordinates;
+
+        // Use isWithinProximity instead of getDistance
+        if (isWithinProximity(entryLat, entryLng, parkedLat, parkedLng, proximityThreshold)) {
           foundEntry = entry;
           break; // Exit the loop if a close entry is found
         }
       }
     }
+
 
     if (foundEntry) {
       // If it exists within the proximity threshold, increment the frequency
@@ -47,21 +50,17 @@ router.post('/', protect, async (req: Request, res: Response): Promise<void> => 
       const newParkedHistory = new ParkedHistory({
         userId,
         parkedLocation,
-        frequency: frequency, // Set the frequency or default to 1
+        frequency: frequency || 1, // Set the frequency or default to 1
       });
 
-      try{
+      try {
         await newParkedHistory.save();
-
-      }catch(error){
-
+        res.status(201).json(newParkedHistory);
+      } catch (error) {
         console.error(error);
-        if(error instanceof Error)
-        res.status(500).json({ error: error.message });
-
+        if (error instanceof Error)
+          res.status(500).json({ error: error.message });
       }
-      
-      res.status(201).json(newParkedHistory);
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -70,11 +69,12 @@ router.post('/', protect, async (req: Request, res: Response): Promise<void> => 
   }
 });
 
-// GET /api/parkedHistory/user/:userId - Get all parked history entries for the logged-in user
-router.get('/user/:userId', protect, async (req: any, res: Response) => {
+// GET /api/parkedHistory - Get all parked history entries for the logged-in user
+router.get('/', protect, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const parkedHistories = await ParkedHistory.find({ userId: req.params.userId });
-    
+    const userId = req.user._id; // Use the logged-in user's ID
+    const parkedHistories = await ParkedHistory.find({ userId });
+
     if (!parkedHistories.length) {
       res.status(404).json({ error: 'No Parking histories were found' });
       return;
@@ -89,11 +89,11 @@ router.get('/user/:userId', protect, async (req: any, res: Response) => {
 });
 
 // GET /api/parkedHistory/:id - Get a specific parked history entry by ID
-router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+router.get('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const parkedHistory = await ParkedHistory.findById(req.params.id.trim());
-    if (!parkedHistory) {
-      res.status(404).json({ error: 'Specific Parking history not found' });
+    if (!parkedHistory || parkedHistory.userId.toString() !== req.user._id.toString()) {
+      res.status(404).json({ error: 'Specific Parking history not found or access denied' });
       return;
     }
     res.status(200).json(parkedHistory);
@@ -105,13 +105,15 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 });
 
 // DELETE /api/parkedHistory/:id - Delete a specific parked history entry by ID
-router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+router.delete('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const deletedParkedHistory = await ParkedHistory.findByIdAndDelete(req.params.id);
-    if (!deletedParkedHistory) {
-      res.status(404).json({ error: 'Parking history not found' });
+    const parkedHistory = await ParkedHistory.findById(req.params.id);
+    if (!parkedHistory || parkedHistory.userId.toString() !== req.user._id.toString()) {
+      res.status(404).json({ error: 'Parking history not found or access denied' });
       return;
     }
+
+    await ParkedHistory.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: 'Parking history deleted successfully' });
   } catch (err) {
     if (err instanceof Error) {
