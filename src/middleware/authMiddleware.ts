@@ -1,9 +1,14 @@
 import { JwtPayload, verify } from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
-import { NextFunction } from 'express';
+
+// Extend the Express Request type to include a user property
+export interface AuthenticatedRequest extends Request {
+  user?: any; // Replace 'any' with your User type if available
+}
 
 // Middleware to check if the user is authenticated
-const protect = async (req: any, res: any, next: NextFunction) => {
+const protect = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   let token;
 
   // Check for token in Authorization header
@@ -14,9 +19,10 @@ const protect = async (req: any, res: any, next: NextFunction) => {
 
       const jwtSecret = process.env.JWT_SECRET;
 
-      if(!jwtSecret){
+      if (!jwtSecret) {
         throw new Error("JWT SECRET is not defined in environment variables");
       }
+
       // Verify token
       const decoded: string | JwtPayload = verify(token, jwtSecret);
 
