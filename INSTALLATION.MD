@@ -43,6 +43,9 @@ Ensure you have the following installed on your computer:
    PORT=3000
    MONGO_URI=mongodb://localhost:27017/proximityCarDB
    JWT_SECRET=jwt_secret_key
+   PORT=3000
+   PROXIMITY_THRESHOLD=500
+   SEARCH_RADIUS=1500
    ```
 
 5. **Set Up the Database**
