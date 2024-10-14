@@ -6,6 +6,8 @@ import User from '../models/User';
 import validateUser from '../middleware/validateMiddleware';
 import { Types } from 'mongoose';
 import { error } from 'console';
+import { AuthenticatedRequest } from '../middleware/authMiddleware'; // Import the custom request interface
+import protect from '../middleware/authMiddleware'; // Import the protect middleware
 
 // Generate JWT Token
 const generateToken = (id: Types.ObjectId): string => {
@@ -79,37 +81,27 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 });
 
 
-//maybe use the auth middleware instead of implementing the auth here
 // GET /api/users/profile - Get logged-in user's profile
-router.get('/profile', async (req: Request, res: Response): Promise<void> => {
+router.get('/profile', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    // Get user details from token (normally you'd check this via middleware)
-    const token = req.headers.authorization?.split(' ')[1];
-    
-    if (!token) {
-      res.status(401).json({ message: 'Not authorized, no token' });
-      return;
-    }
-
-    // Decode the token
-    const decoded = verify(token, process.env.JWT_SECRET as string) as { id: string };
-
-    // Find user by ID
-    const user = await User.findById(decoded.id).select('-password');
+    // Since the protect middleware attaches the user to req, we can directly access it
+    const user = req.user;
 
     if (!user) {
       res.status(404).json({ message: 'User not found' });
       return;
     }
-
+    
+    // Return the user's profile details (without the password)
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
     });
   } catch (error) {
-    if(error instanceof Error)
-    res.status(500).json({ error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 
