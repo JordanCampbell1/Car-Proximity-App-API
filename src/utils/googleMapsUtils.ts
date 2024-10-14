@@ -58,7 +58,7 @@ export const searchNearby = async (lat: number, lng: number, keyword: string) =>
         const response = await axios.get(`${GOOGLE_MAPS_BASE_URL}/place/nearbysearch/json`, {
             params: {
                 location: `${lat},${lng}`,
-                radius: 1500,  
+                radius: process.env.SEARCH_RADIUS || 1500, 
                 keyword,
                 key: process.env.GOOGLE_MAPS_API_KEY,
             },
