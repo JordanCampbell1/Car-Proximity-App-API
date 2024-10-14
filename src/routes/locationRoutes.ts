@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import Location from '../models/Location'; 
-import protect from '../middleware/authMiddleware'; 
+import protect, { AuthenticatedRequest } from '../middleware/authMiddleware';
 import { reverseGeocode, getDirections, calculateDistance, searchNearby } from '../utils/googleMapsUtils';
 import { isWithinProximity } from '../utils/proximityUtils';
 
@@ -90,8 +90,8 @@ router.get('/proximity', (req: Request, res: Response) => {
 // ------------------- LOCATION CRUD ROUTES -------------------
 
 // POST /api/locations - Create a new location (user must be logged in)
-router.post('/', protect, async (req: Request, res: Response) => {
-  const { name, location, radius, placeType, userId } = req.body;
+router.post('/', protect, async (req: AuthenticatedRequest, res: Response) => {
+  const { name, location, radius, placeType } = req.body;
 
   try {
     const newLocation = new Location({
@@ -99,7 +99,7 @@ router.post('/', protect, async (req: Request, res: Response) => {
       location,
       radius,
       placeType,
-      userId,  // Use the logged-in user's ID
+      userId: req.user._id,  // Use the logged-in user's ID from req.user
     });
 
     await newLocation.save();
@@ -122,30 +122,14 @@ router.get('/', async (req: Request, res: Response) => {
     }
   }
 });
-
-// GET /api/locations/:id - Get a specific location by ID
-router.get('/:id', async (req: Request, res: Response): Promise<void> => {
-    try {
-      const location = await Location.findById(req.params.id);
-      if (!location) {
-        res.status(404).json({ error: 'Location not found' });
-        return;
-      }
-      res.status(200).json(location);
-    } catch (err) {
-      if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
-      }
-    }
-  });
   
-// GET /api/locations/user/:userId - Get all locations by user ID
-router.get('/user/:userId', async (req: Request, res: Response) => {
+// GET /api/locations/user - Get all locations by the logged-in user (user must be logged in)
+router.get('/user', protect, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const locations = await Location.find({ userId: req.params.userId });
+    const locations = await Location.find({ userId: req.user._id }); // Use logged-in user's ID
 
-    if(!locations){
-      res.status(404).json({error : "No locations found for this user"});
+    if (!locations.length) {
+      res.status(404).json({ error: 'No locations found for this user' });
       return;
     }
 
@@ -157,22 +141,47 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
   }
 });
 
-// DELETE /api/locations/:id - Delete a specific location by ID
-router.delete('/:id', protect, async (req: Request, res: Response): Promise<void> => {
-    try {
-      const deletedLocation = await Location.findByIdAndDelete(req.params.id);
-      if (!deletedLocation) {
-        res.status(404).json({ error: 'Location not found' });
-        return;
-      }
-      res.status(200).json({ message: 'Location deleted successfully' });
-    } catch (err) {
-      if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
-      }
+// GET /api/locations/:id - Get a specific location by ID
+router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const location = await Location.findById(req.params.id);
+    if (!location) {
+      res.status(404).json({ error: 'Location not found' });
+      return;
     }
-  });
+    res.status(200).json(location);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
 
+// DELETE /api/locations/:id - Delete a specific location by ID (user must be logged in)
+router.delete('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const location = await Location.findById(req.params.id);
+    
+    if (!location) {
+      res.status(404).json({ error: 'Location not found' });
+      return;
+    }
 
+    // Ensure that the logged-in user is the owner of the location
+    if (location.userId.toString() !== req.user._id.toString()) {
+      res.status(403).json({ error: 'You are not authorized to delete this location' });
+      return;
+    }
+
+    // Use deleteOne to remove the location
+    await Location.deleteOne({ _id: location._id });
+    
+    res.status(200).json({ message: 'Location deleted successfully' });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
 
 export default router;
