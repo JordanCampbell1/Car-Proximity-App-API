@@ -46,6 +46,7 @@ Ensure you have the following installed on your computer:
    PORT=3000
    PROXIMITY_THRESHOLD=500
    SEARCH_RADIUS=1500
+   GOOGLE_MAPS_API_KEY=<API-KEY>
    ```
 
 5. **Set Up the Database**
