@@ -96,6 +96,12 @@ router.get('/proximity', protect, async (req: AuthenticatedRequest, res: Respons
           status: 'exited', // Notify user has exited proximity
         });
         proximityStatus[reminderKey] = false; // Mark as outside proximity
+      } else if (isNearby && wasInProximity){
+        // User is still in proximity, trigger "within" notification
+        proximityResults.push({
+          reminder,
+          status: 'within', // Notify user is within proximity
+        });
       }
     }
 
