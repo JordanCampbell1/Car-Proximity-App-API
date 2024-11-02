@@ -7,6 +7,7 @@ import errorHandler from './middleware/errorMiddleware';
 import userRoutes from './routes/userRoutes';
 import parkedHistoryRoutes from './routes/parkedHistoryRoutes'
 import DrivingHistoryRoutes from './routes/drivingHistoryRoutes';
+import voiceRoutes from './routes/voiceRoutes';
 
 config();
 
@@ -23,6 +24,7 @@ const startServer = async (): Promise<void> => {
   app.use('/api/reminders', reminderRoutes);
   app.use('/api/parkedHistory', parkedHistoryRoutes);
   app.use('/api/drivingHistory', DrivingHistoryRoutes);
+  app.use('/api/voice', voiceRoutes);
 
   // Health check route
   app.get('/health', (req, res) => {
