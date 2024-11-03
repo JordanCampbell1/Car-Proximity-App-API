@@ -36,7 +36,20 @@ export const getDirections = async (origin: string, destination: string) => {
 };
 
 // Calculate the distance between two locations
-export const calculateDistance = async (origin: string, destination: string) => {
+
+interface DistanceMatrixResponse {
+    distance: {
+      text: string;   // e.g., "39.8 km"
+      value: number;  // e.g., 39816 (in meters)
+    };
+    duration: {
+      text: string;   // e.g., "1 hour 32 mins"
+      value: number;  // e.g., 5528 (in seconds)
+    };
+    status: string;   // e.g., "OK"
+  }
+
+export const calculateDistance = async (origin: string, destination: string): Promise<[DistanceMatrixResponse]> => {
     try {
         const response = await axios.get(`${GOOGLE_MAPS_BASE_URL}/distancematrix/json`, {
             params: {
@@ -45,7 +58,7 @@ export const calculateDistance = async (origin: string, destination: string) => 
                 key: process.env.GOOGLE_MAPS_API_KEY,
             },
         });
-        return response.data.rows[0].elements[0];
+        return response.data.rows[0].elements; //make the calling function access the elements
     } catch (error) {
         console.error('Error calculating distance:', error);
         throw new Error('Failed to calculate distance');

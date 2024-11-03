@@ -5,6 +5,8 @@ import { reverseGeocode } from '../utils/googleMapsUtils';
 import ParkedHistory from '../models/ParkedHistory';
 const router = Router();
 
+// "tasks near me" - handled by GET /api/reminders/proximity
+// "what is my next task?" - handled by GET /api/reminders/proximity/nearest-reminder
 
 router.post('/voice-command', protect, async (req: Request, res: Response): Promise<void> => {
     const { command, userId } = req.body;
@@ -21,7 +23,7 @@ router.post('/voice-command', protect, async (req: Request, res: Response): Prom
                     const destinations = await Promise.all(frequentLocations.map(async (location): Promise<string> => {
                         const [longitude, latitude] = location.parkedLocation.coordinates;
                         // console.log(`longitude: ${longitude} and latitiude: ${latitude}`);
-                        return await reverseGeocode(latitude, longitude);
+                        return await reverseGeocode(latitude, longitude); //can possibly be optimized if the google api accepts multiple locations in query
                     }));
 
                     res.json({ response: `Your frequent destinations include: ${destinations.join("|||")}.` });

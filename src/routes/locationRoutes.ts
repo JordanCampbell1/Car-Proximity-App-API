@@ -69,7 +69,7 @@ router.get('/search-nearby', async (req: Request, res: Response) => {
 });
 
 // GET /api/locations/proximity - Check if user is within proximity of a specific location
-router.get('/proximity', (req: Request, res: Response) => {
+router.get('/proximity', protect, (req: Request, res: Response) => {
   const { userLat, userLng, locationLat, locationLng, radius } = req.query;
   if (!userLat || !userLng || !locationLat || !locationLng || !radius) {
     res.status(400).json({ error: 'Missing required parameters' });

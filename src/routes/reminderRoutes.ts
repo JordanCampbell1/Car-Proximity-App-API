@@ -2,8 +2,20 @@ import { Router, Request, Response } from 'express';
 const router = Router();
 import Reminder from '../models/Reminder';
 import protect, { AuthenticatedRequest } from '../middleware/authMiddleware';
-import { calculateDistance } from '../utils/googleMapsUtils'; 
+import { calculateDistance, reverseGeocode } from '../utils/googleMapsUtils';
 import { isWithinProximity } from '../utils/proximityUtils';
+
+interface DistanceMatrixResponse {
+  distance: {
+    text: string;   // e.g., "39.8 km"
+    value: number;  // e.g., 39816 (in meters)
+  };
+  duration: {
+    text: string;   // e.g., "1 hour 32 mins"
+    value: number;  // e.g., 5528 (in seconds)
+  };
+  status: string;   // e.g., "OK"
+}
 
 // In-memory object to track if user is inside proximity
 const proximityStatus: { [key: string]: boolean } = {};
@@ -96,7 +108,7 @@ router.get('/proximity', protect, async (req: AuthenticatedRequest, res: Respons
           status: 'exited', // Notify user has exited proximity
         });
         proximityStatus[reminderKey] = false; // Mark as outside proximity
-      } else if (isNearby && wasInProximity){
+      } else if (isNearby && wasInProximity) {
         // User is still in proximity, trigger "within" notification
         proximityResults.push({
           reminder,
@@ -116,6 +128,61 @@ router.get('/proximity', protect, async (req: AuthenticatedRequest, res: Respons
       res.status(500).json({ error: err.message });
     }
   }
+});
+
+// GET /api/reminders/proximity/nearest-reminder - Get closest reminder and distance to user's current location
+router.get('/proximity/nearest-reminder', protect, async (req: AuthenticatedRequest, res: Response) => {
+  const { lat: userLat, lng: userLng } = req.query; // User's current location
+
+  if (!userLat || !userLng) {
+    res.status(400).json({ error: 'Latitude and longitude are required' });
+    return;
+  }
+  try {
+
+    const reminders = await Reminder.find({ userId: req.user._id });
+
+    if (!reminders) {
+      res.status(400).json({ error: "No Reminders in DB" })
+      return;
+    }
+
+    let closestReminder;
+    let shortestDistance: number = Infinity;
+
+    const reminderLocations: string = reminders
+      .map(reminder => {
+        const [longitude, latitude] = reminder.location.coordinates;
+        return `${latitude},${longitude}`;
+      })
+      .join("|");
+
+    const userLocation: string = `${userLat},${userLng}`;
+
+
+    const results = await calculateDistance(userLocation, reminderLocations);
+
+    let count = 0;
+    results.forEach((result: DistanceMatrixResponse) => {
+
+      if (result.status === "OK" && result.distance.value < shortestDistance) {
+        shortestDistance = result.distance.value;
+        closestReminder = reminders[count];
+      }
+      count++;
+    });
+
+    res.status(200).json({ shortestDistance, closestReminder });
+
+
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+
+
 });
 
 export default router;
