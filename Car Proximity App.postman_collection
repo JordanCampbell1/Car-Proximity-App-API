@@ -1,152 +1,11 @@
 {
 	"info": {
-		"_postman_id": "e87490f3-e3dd-4aa1-b9ec-80aae18cbbb5",
-		"name": "Car Proximity App Copy",
+		"_postman_id": "c48db73d-cf42-488d-b776-73524be75a69",
+		"name": "Car Proximity App Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "34149118"
+		"_exporter_id": "33501503"
 	},
 	"item": [
-		{
-			"name": "Driving History",
-			"item": [
-				{
-					"name": "Create Driving History",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"drivingLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-73.935242, 40.730610] \r\n  },\r\n  \"frequency\": 1,\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:3000/api/drivinghistory",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"drivinghistory"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Driving History",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"drivingLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-71.935242, 23.730610]\r\n  }\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:3000/api/drivinghistory/670da239a4931b1fa0ae88b7",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"drivinghistory",
-								"670da239a4931b1fa0ae88b7"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Driving History",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:3000/api/drivinghistory",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"drivinghistory"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Driving Trends",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:3000/api/drivinghistory/trends",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"drivinghistory",
-								"trends"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "User",
 			"item": [
@@ -218,7 +77,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"jordancampbell.work@gmail.com\",\r\n    \"password\": \"password123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"testuser@example.com\",\r\n    \"password\": \"testpassword\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -292,6 +151,147 @@
 			]
 		},
 		{
+			"name": "Driving History",
+			"item": [
+				{
+					"name": "Create Driving History",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"drivingLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-73.935242, 40.730610] \r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/drivinghistory",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"drivinghistory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Driving History",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"drivingLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-71.935242, 29.730610]\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/drivinghistory/6727de6427aab1f0bbab24f5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"drivinghistory",
+								"6727de6427aab1f0bbab24f5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Driving History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/drivinghistory",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"drivinghistory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driving Trends",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/drivinghistory/trends",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"drivinghistory",
+								"trends"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Parked History",
 			"item": [
 				{
@@ -307,7 +307,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"parkedLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0311, 38.8950]\r\n  },\r\n  \"frequency\": 1\r\n  \r\n}\r\n",
+							"raw": "{\r\n  \"parkedLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [76.6447, 18.1040]\r\n  },\r\n  \"frequency\": 1\r\n  \r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -396,7 +396,13 @@
 					"name": "Delete Parked History By ID",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:3000/api/parkedhistory/{{ParkedHistoryID}}",
 							"protocol": "http",
@@ -437,7 +443,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"userId\": \"6701df8d356df43d825dfc6e\",\r\n  \"drivingLocation\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0311, 38.8950]\r\n  },\r\n  \"frequency\": 1 // Optional\r\n}\r\n",
+									"raw": "",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -445,7 +451,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/locations/reverse-geocode?lat=21.7765651&lng=-72.2238235",
+									"raw": "http://localhost:3000/api/locations/reverse-geocode?lat=18.776565&lng=-76.2238235",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -459,11 +465,11 @@
 									"query": [
 										{
 											"key": "lat",
-											"value": "21.7765651"
+											"value": "18.776565"
 										},
 										{
 											"key": "lng",
-											"value": "-72.2238235"
+											"value": "-76.2238235"
 										}
 									]
 								}
@@ -474,7 +480,13 @@
 							"name": "Get Directions Using Coordinates",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "http://localhost:3000/api/locations/directions?origin=21.7765651,-72.2238235&destination=21.793616184157646,-72.17731552202139",
 									"protocol": "http",
@@ -505,7 +517,36 @@
 							"name": "Calculate Distance Using Coordinates",
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/locations/distance?destination=18.002295%2C-76.788996&origin=18.018907%2C-76.780672",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"locations",
+										"distance"
+									],
+									"query": [
+										{
+											"key": "destination",
+											"value": "18.002295%2C-76.788996"
+										},
+										{
+											"key": "origin",
+											"value": "18.018907%2C-76.780672"
+										}
+									]
+								}
 							},
 							"response": []
 						},
@@ -513,7 +554,48 @@
 							"name": "Proximity Check",
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/locations/proximity?userLat=18.014718&userLng=-76.789061&locationLat=18.017354&locationLng=-76.792317&radius=500",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"locations",
+										"proximity"
+									],
+									"query": [
+										{
+											"key": "userLat",
+											"value": "18.014718"
+										},
+										{
+											"key": "userLng",
+											"value": "-76.789061"
+										},
+										{
+											"key": "locationLat",
+											"value": "18.017354"
+										},
+										{
+											"key": "locationLng",
+											"value": "-76.792317"
+										},
+										{
+											"key": "radius",
+											"value": "500"
+										}
+									]
+								}
 							},
 							"response": []
 						},
@@ -521,9 +603,15 @@
 							"name": "Search",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "http://localhost:3000/api/locations/search-nearby?lat=21.7765651&lng=-72.2238235&keyword=gym",
+									"raw": "http://localhost:3000/api/locations/search-nearby?lat=18.023243&lng=-76.792011&keyword=gym",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -537,11 +625,11 @@
 									"query": [
 										{
 											"key": "lat",
-											"value": "21.7765651"
+											"value": "18.023243"
 										},
 										{
 											"key": "lng",
-											"value": "-72.2238235"
+											"value": "-76.792011"
 										},
 										{
 											"key": "keyword",
@@ -575,7 +663,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"New Gym\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-77.0369, 38.9072]\r\n  },\r\n  \"radius\": 300,\r\n  \"placeType\": \"gym\",\r\n  \"userId\": \"6701df8d356df43d825dfc6e\"\r\n}\r\n",
+									"raw": "{\r\n  \"name\": \"New Gym\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-76.0869, 38.9072]\r\n  },\r\n  \"radius\": 300,\r\n  \"placeType\": \"gym\",\r\n  \"userId\": \"6701df8d356df43d825dfc6e\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -604,7 +692,13 @@
 							"name": "Get All Locations",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "http://127.0.0.1:3000/api/locations",
 									"protocol": "http",
@@ -629,8 +723,8 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "",
-										"value": "",
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
 										"type": "text"
 									}
 								],
@@ -665,7 +759,7 @@
 									}
 								],
 								"url": {
-									"raw": "http://127.0.0.1:3000/api/locations/user?=",
+									"raw": "http://127.0.0.1:3000/api/locations/user",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -678,12 +772,6 @@
 										"api",
 										"locations",
 										"user"
-									],
-									"query": [
-										{
-											"key": "",
-											"value": ""
-										}
 									]
 								}
 							},
@@ -744,7 +832,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"message\": \"Buy groceries\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [-74.006, 40.7128] \r\n  }\r\n}\r\n",
+							"raw": "{\r\n  \"message\": \"pick upenemtn fdgdf place\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [ -76.46907, 18.007483] \r\n  }\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -781,7 +869,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:3000/api/reminders?",
+							"raw": "http://127.0.0.1:3000/api/reminders",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -797,7 +885,8 @@
 							"query": [
 								{
 									"key": "",
-									"value": null
+									"value": null,
+									"disabled": true
 								}
 							]
 						}
@@ -816,7 +905,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:3000/api/reminders/proximity",
+							"raw": "http://127.0.0.1:3000/api/reminders/proximity?lat=17.9710&lng=76.7936",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -829,6 +918,247 @@
 								"api",
 								"reminders",
 								"proximity"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "17.9710"
+								},
+								{
+									"key": "lng",
+									"value": "76.7936"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Closest Reminder to User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/reminders/proximity/nearest-reminder?lat=17.9714&lng=-76.7936",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"reminders",
+								"proximity",
+								"nearest-reminder"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "17.9714"
+								},
+								{
+									"key": "lng",
+									"value": "-76.7936"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Reminder as Completed",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/reminders/:id/complete",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"reminders",
+								":id",
+								"complete"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{reminderID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Completed Reminders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/reminders/completed",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"reminders",
+								"completed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Incomplete Reminders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/reminders/incomplete",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"reminders",
+								"incomplete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Voice",
+			"item": [
+				{
+					"name": "Tasks Command",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"command\": \"Show me my tasks\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/voice/voice-command",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"voice",
+								"voice-command"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Frequent Destinations Command",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"command\": \"Show me my frequent destinations\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/voice/voice-command",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"voice",
+								"voice-command"
 							]
 						}
 					},
@@ -857,6 +1187,13 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDk5YjI3ZWExZmNmMzZiNmE3ZDI5NCIsImlhdCI6MTcyOTA2Mjg3NCwiZXhwIjoxNzMxNjU0ODc0fQ.WIe8J6BT7A4QUnVSTQsjBarndkqCvs19p8a465a7tjY",
+			"type": "default"
 		}
 	]
 }
