@@ -2,20 +2,10 @@ import { Router, Request, Response } from 'express';
 const router = Router();
 import Reminder from '../models/Reminder';
 import protect, { AuthenticatedRequest } from '../middleware/authMiddleware';
-import { calculateDistance, reverseGeocode } from '../utils/googleMapsUtils';
+import { calculateDistance, DistanceMatrixResponse, reverseGeocode } from '../utils/googleMapsUtils';
 import { isWithinProximity } from '../utils/proximityUtils';
 
-interface DistanceMatrixResponse {
-  distance: {
-    text: string;   // e.g., "39.8 km"
-    value: number;  // e.g., 39816 (in meters)
-  };
-  duration: {
-    text: string;   // e.g., "1 hour 32 mins"
-    value: number;  // e.g., 5528 (in seconds)
-  };
-  status: string;   // e.g., "OK"
-}
+
 
 // In-memory object to track if user is inside proximity
 const proximityStatus: { [key: string]: boolean } = {};

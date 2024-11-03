@@ -37,7 +37,7 @@ export const getDirections = async (origin: string, destination: string) => {
 
 // Calculate the distance between two locations
 
-interface DistanceMatrixResponse {
+export interface DistanceMatrixResponse {
     distance: {
       text: string;   // e.g., "39.8 km"
       value: number;  // e.g., 39816 (in meters)

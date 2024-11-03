@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import Reminder from '../models/Reminder';
-import protect from '../middleware/authMiddleware';
+import protect, { AuthenticatedRequest } from '../middleware/authMiddleware';
 import { reverseGeocode } from '../utils/googleMapsUtils';
 import ParkedHistory from '../models/ParkedHistory';
 const router = Router();
@@ -8,13 +8,13 @@ const router = Router();
 // "tasks near me" - handled by GET /api/reminders/proximity
 // "what is my next task?" - handled by GET /api/reminders/proximity/nearest-reminder
 
-router.post('/voice-command', protect, async (req: Request, res: Response): Promise<void> => {
-    const { command, userId } = req.body;
+router.post('/voice-command', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    const { command } = req.body;
 
     try {
         switch (true) {
             case command.includes("frequent destinations"):
-                const frequentLocations = await ParkedHistory.find({ userId }).sort({ frequency: -1 }).limit(3);
+                const frequentLocations = await ParkedHistory.find({ userId: req.user._id }).sort({ frequency: -1 }).limit(3);
 
                 // console.log(frequentLocations);
 
@@ -36,7 +36,7 @@ router.post('/voice-command', protect, async (req: Request, res: Response): Prom
 
             case command.includes("tasks"): {
                 // Fetch all reminders for the user by userId
-                const reminders = await Reminder.find({ userId }).lean();
+                const reminders = await Reminder.find({ userId: req.user._id }).lean();
 
                 if (reminders.length > 0) {
                     // Extract each message from the reminders array
