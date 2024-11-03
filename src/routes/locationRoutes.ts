@@ -9,7 +9,7 @@ const router = Router();
   // ------------------- GOOGLE MAPS API ROUTES -------------------
 
 // GET /api/locations/reverse-geocode - Reverse geocode lat/lng to an address
-router.get('/reverse-geocode', async (req: Request, res: Response) => {
+router.get('/reverse-geocode', protect, async (req: AuthenticatedRequest, res: Response) => {
   const { lat, lng } = req.query;
   if (!lat || !lng) {
     res.status(400).json({ error: 'Latitude and longitude are required' });
@@ -24,7 +24,7 @@ router.get('/reverse-geocode', async (req: Request, res: Response) => {
 });
 
 // GET /api/locations/directions - Get driving directions between two locations
-router.get('/directions', async (req: Request, res: Response) => {
+router.get('/directions', protect, async (req: AuthenticatedRequest, res: Response) => {
   const { origin, destination } = req.query;
   if (!origin || !destination) {
     res.status(400).json({ error: 'Origin and destination are required' });
@@ -39,7 +39,7 @@ router.get('/directions', async (req: Request, res: Response) => {
 });
 
 // GET /api/locations/distance - Calculate the distance between two locations
-router.get('/distance', async (req: Request, res: Response) => {
+router.get('/distance', protect, async (req: AuthenticatedRequest, res: Response) => {
   const { origin, destination } = req.query;
   if (!origin || !destination) {
     res.status(400).json({ error: 'Origin and destination are required' });
@@ -54,7 +54,7 @@ router.get('/distance', async (req: Request, res: Response) => {
 });
 
 // GET /api/locations/search-nearby - Search nearby places based on a keyword
-router.get('/search-nearby', async (req: Request, res: Response) => {
+router.get('/search-nearby', protect, async (req: AuthenticatedRequest, res: Response) => {
   const { lat, lng, keyword } = req.query;
   if (!lat || !lng || !keyword) {
     res.status(400).json({ error: 'Latitude, longitude, and keyword are required' });
@@ -69,7 +69,7 @@ router.get('/search-nearby', async (req: Request, res: Response) => {
 });
 
 // GET /api/locations/proximity - Check if user is within proximity of a specific location
-router.get('/proximity', protect, (req: Request, res: Response) => {
+router.get('/proximity', protect, (req: AuthenticatedRequest, res: Response) => {
   const { userLat, userLng, locationLat, locationLng, radius } = req.query;
   if (!userLat || !userLng || !locationLat || !locationLng || !radius) {
     res.status(400).json({ error: 'Missing required parameters' });
@@ -112,7 +112,7 @@ router.post('/', protect, async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // GET /api/locations - Get all locations
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', protect, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const locations = await Location.find();
     res.status(200).json(locations);
@@ -142,7 +142,7 @@ router.get('/user', protect, async (req: AuthenticatedRequest, res: Response) =>
 });
 
 // GET /api/locations/:id - Get a specific location by ID
-router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+router.get('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const location = await Location.findById(req.params.id);
     if (!location) {
