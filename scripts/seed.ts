@@ -15,56 +15,74 @@ async function seedDatabase() {
 
     // Drop the database if it exists
     const ProximityAPI_DB = mongoose.connection.db;
-    if(ProximityAPI_DB){
-      await ProximityAPI_DB.dropDatabase();    
+    if (ProximityAPI_DB) {
+      await ProximityAPI_DB.dropDatabase();
     }
 
     // Seed data
-    const user = await User.create({ 
-      name: 'Test User',      // Updated from username to name
-      email: 'testuser@example.com', // Added email field for user
+    const user = await User.create({
+      name: 'Test User',
+      email: 'testuser@example.com',
       password: 'testpassword' // Password will be hashed
     });
 
     await Reminder.create([
       {
         userId: user._id,
-        message: 'Pick up groceries',
+        message: 'Pick up groceries at Liguanea Plaza',
         location: {
           type: 'Point',
-          coordinates: [-77.0369, 38.9072], // Example coordinates
+          coordinates: [-76.7499, 18.0127] // Coordinates for Liguanea, Kingston
         },
       },
       {
         userId: user._id,
-        message: 'Return library books',
+        message: 'Return library books to UWI Library',
         location: {
           type: 'Point',
-          coordinates: [-77.0421, 38.8951], // Example coordinates
+          coordinates: [-76.7462, 18.0056] // Coordinates for UWI, Mona
+        },
+      },
+      {
+        userId: user._id,
+        message: 'Attend yoga class',
+        location: {
+          type: 'Point',
+          coordinates: [-76.7925, 18.0321] // Coordinates for New Kingston
         },
       },
     ]);
 
     await Location.create([
       {
-        userId: user._id, 
-        name: 'Extreme Fitness',
+        userId: user._id,
+        name: 'Extreme Fitness Gym',
         location: {
           type: 'Point',
-          coordinates: [-77.0369, 38.9072], // Example coordinates (longitude, latitude)
+          coordinates: [-76.7914, 18.0111] // Coordinates for Half-Way-Tree
         },
         radius: 500,
-        placeType: 'gym', 
+        placeType: 'gym',
       },
       {
-        userId: user._id, 
-        name: 'HiLo',
+        userId: user._id,
+        name: 'Sovereign Supermarket',
         location: {
           type: 'Point',
-          coordinates: [-77.0421, 38.8951], // Example coordinates (longitude, latitude)
+          coordinates: [-76.7481, 18.0128] // Coordinates for Sovereign Centre
         },
         radius: 500,
-        placeType: 'store', 
+        placeType: 'store',
+      },
+      {
+        userId: user._id,
+        name: 'Emancipation Park',
+        location: {
+          type: 'Point',
+          coordinates: [-76.7825, 18.0109] // Coordinates for Emancipation Park
+        },
+        radius: 800,
+        placeType: 'park',
       },
     ]);
 
@@ -74,39 +92,56 @@ async function seedDatabase() {
         userId: user._id,
         parkedLocation: {
           type: 'Point',
-          coordinates: [-77.0369, 38.9072], // Example parked location coordinates
+          coordinates: [-76.7488, 18.0123] // Near Sovereign Centre
         },
-        frequency: 3, // Example frequency
+        frequency: 4,
       },
       {
         userId: user._id,
         parkedLocation: {
           type: 'Point',
-          coordinates: [-77.0421, 38.8951], 
+          coordinates: [-76.7825, 18.0109] // Near Emancipation Park
         },
-        frequency: 2,
+        frequency: 5,
+      },
+      {
+        userId: user._id,
+        parkedLocation: {
+          type: 'Point',
+          coordinates: [-76.7914, 18.0111] // Near Half-Way-Tree
+        },
+        frequency: 3,
       },
     ]);
 
-     // Create driving history entries
-     await DrivingHistory.create([
+    // Create driving history entries
+    await DrivingHistory.create([
       {
         userId: user._id,
         drivingLocation: {
           type: 'Point',
-          coordinates: [-77.0311, 38.8950], // Example driving location coordinates
+          coordinates: [-76.8043, 18.0242] // Coordinates for Red Hills Road
         },
-        frequency: 1, // Example frequency
+        frequency: 2,
       },
       {
         userId: user._id,
         drivingLocation: {
           type: 'Point',
-          coordinates: [-77.0421, 38.8951], 
+          coordinates: [-76.7869, 18.0192] // Coordinates near Constant Spring Road
         },
-        frequency: 2, 
+        frequency: 3,
+      },
+      {
+        userId: user._id,
+        drivingLocation: {
+          type: 'Point',
+          coordinates: [-76.7462, 18.0056] // Near UWI Mona
+        },
+        frequency: 1,
       },
     ]);
+
 
     console.log('Seed data created successfully');
   } catch (error) {
