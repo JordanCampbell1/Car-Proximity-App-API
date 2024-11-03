@@ -56,7 +56,7 @@ router.patch('/:id', protect, async (req: AuthenticatedRequest, res: Response): 
       // If not within proximity, update the drivingLocation to the new one
       drivingHistory.drivingLocation = {
         type: 'Point',
-        coordinates: drivingLocation.coordinates,
+        coordinates: [newLng, newLat],
       };
     }
 
