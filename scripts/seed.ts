@@ -29,119 +29,154 @@ async function seedDatabase() {
     await Reminder.create([
       {
         userId: user._id,
-        message: 'Pick up groceries at Liguanea Plaza',
+        message: 'Pick up groceries',
         location: {
           type: 'Point',
-          coordinates: [-76.7499, 18.0127] // Coordinates for Liguanea, Kingston
+          coordinates: [-76.7936, 18.0179], // Example coordinates in Kingston, Jamaica
         },
+        radius: 500, // 500 meters proximity radius
       },
       {
         userId: user._id,
-        message: 'Return library books to UWI Library',
+        message: 'Visit the bank',
         location: {
           type: 'Point',
-          coordinates: [-76.7462, 18.0056] // Coordinates for UWI, Mona
+          coordinates: [-76.8048, 18.0038], // Another example location in Kingston
         },
+        radius: 300, // 300 meters proximity radius
       },
       {
         userId: user._id,
-        message: 'Attend yoga class',
+        message: 'Return library books',
         location: {
           type: 'Point',
-          coordinates: [-76.7925, 18.0321] // Coordinates for New Kingston
+          coordinates: [-76.7825, 18.0158], // Library location in Kingston
         },
+        radius: 400, // 400 meters proximity radius
+      },
+      {
+        userId: user._id,
+        message: 'Gym session',
+        location: {
+          type: 'Point',
+          coordinates: [-76.8095, 18.0122], // Gym location coordinates
+        },
+        radius: 200, // 200 meters proximity radius
       },
     ]);
 
-    await Location.create([
-      {
-        userId: user._id,
-        name: 'Extreme Fitness Gym',
-        location: {
-          type: 'Point',
-          coordinates: [-76.7914, 18.0111] // Coordinates for Half-Way-Tree
-        },
-        radius: 500,
-        placeType: 'gym',
-      },
-      {
-        userId: user._id,
-        name: 'Sovereign Supermarket',
-        location: {
-          type: 'Point',
-          coordinates: [-76.7481, 18.0128] // Coordinates for Sovereign Centre
-        },
-        radius: 500,
-        placeType: 'store',
-      },
-      {
-        userId: user._id,
-        name: 'Emancipation Park',
-        location: {
-          type: 'Point',
-          coordinates: [-76.7825, 18.0109] // Coordinates for Emancipation Park
-        },
-        radius: 800,
-        placeType: 'park',
-      },
-    ]);
-
-    // Create parked history entries
     await ParkedHistory.create([
       {
         userId: user._id,
         parkedLocation: {
           type: 'Point',
-          coordinates: [-76.7488, 18.0123] // Near Sovereign Centre
+          coordinates: [-76.7936, 18.0179], // Example coordinates in Kingston, Jamaica
         },
-        frequency: 4,
+        frequency: 2, // Example frequency
       },
       {
         userId: user._id,
         parkedLocation: {
           type: 'Point',
-          coordinates: [-76.7825, 18.0109] // Near Emancipation Park
+          coordinates: [-76.8048, 18.0038], // Another example location
         },
-        frequency: 5,
+        frequency: 1, // Example frequency
       },
       {
         userId: user._id,
         parkedLocation: {
           type: 'Point',
-          coordinates: [-76.7914, 18.0111] // Near Half-Way-Tree
+          coordinates: [-76.7825, 18.0158], // Library location coordinates
         },
-        frequency: 3,
+        frequency: 3, // Example frequency
+      },
+      {
+        userId: user._id,
+        parkedLocation: {
+          type: 'Point',
+          coordinates: [-76.8095, 18.0122], // Gym location coordinates
+        },
+        frequency: 1, // Example frequency
       },
     ]);
 
-    // Create driving history entries
+    await Location.create([
+      {
+        name: 'University of the West Indies',
+        location: {
+          type: 'Point',
+          coordinates: [-76.7952, 18.0148], // Example coordinates for UWI Mona
+        },
+        radius: 100, // Example radius in meters
+        placeType: 'University',
+        userId: user._id,
+      },
+      {
+        name: 'Half Way Tree',
+        location: {
+          type: 'Point',
+          coordinates: [-76.7947, 18.0122], // Example coordinates for Half Way Tree
+        },
+        radius: 200, // Example radius in meters
+        placeType: 'Shopping',
+        userId: user._id,
+      },
+      {
+        name: 'National Gallery of Jamaica',
+        location: {
+          type: 'Point',
+          coordinates: [-76.9735, 18.0024], // Example coordinates for the National Gallery
+        },
+        radius: 150, // Example radius in meters
+        placeType: 'Cultural',
+        userId: user._id,
+      },
+      {
+        name: 'Emancipation Park',
+        location: {
+          type: 'Point',
+          coordinates: [-76.9738, 18.0045], // Example coordinates for Emancipation Park
+        },
+        radius: 250, // Example radius in meters
+        placeType: 'Park',
+        userId: user._id,
+      },
+    ]);
+
     await DrivingHistory.create([
       {
         userId: user._id,
         drivingLocation: {
           type: 'Point',
-          coordinates: [-76.8043, 18.0242] // Coordinates for Red Hills Road
+          coordinates: [-76.7952, 18.0148], // Example coordinates for a driving location
         },
-        frequency: 2,
+        frequency: 5, // Example frequency
       },
       {
         userId: user._id,
         drivingLocation: {
           type: 'Point',
-          coordinates: [-76.7869, 18.0192] // Coordinates near Constant Spring Road
+          coordinates: [-76.7947, 18.0122], // Example coordinates for another driving location
         },
-        frequency: 3,
+        frequency: 3, // Example frequency
       },
       {
         userId: user._id,
         drivingLocation: {
           type: 'Point',
-          coordinates: [-76.7462, 18.0056] // Near UWI Mona
+          coordinates: [-76.9735, 18.0024], // Example coordinates for another driving location
         },
-        frequency: 1,
+        frequency: 1, // Example frequency
+      },
+      {
+        userId: user._id,
+        drivingLocation: {
+          type: 'Point',
+          coordinates: [-76.9738, 18.0045], // Example coordinates for another driving location
+        },
+        frequency: 2, // Example frequency
       },
     ]);
-
 
     console.log('Seed data created successfully');
   } catch (error) {
