@@ -175,4 +175,29 @@ router.get('/proximity/nearest-reminder', protect, async (req: AuthenticatedRequ
 
 });
 
+// PATCH /api/reminders/:id/complete - Mark a reminder as completed
+router.patch('/:id/complete', protect, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    // Find the reminder by ID and user ID to ensure it belongs to the logged-in user
+    const reminder = await Reminder.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user._id },
+      { isCompleted: true },
+      { new: true }
+    );
+
+    // Check if the reminder exists
+    if (!reminder) {
+      res.status(404).json({ error: 'Reminder not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Reminder marked as completed', reminder });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+
 export default router;
