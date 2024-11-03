@@ -199,5 +199,48 @@ router.patch('/:id/complete', protect, async (req: AuthenticatedRequest, res: Re
   }
 });
 
+// GET /api/reminders/completed - Get only completed reminders for the logged-in user
+router.get('/completed', protect, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const completedReminders = await Reminder.find({
+      userId: req.user._id,
+      isCompleted: true,
+    });
+
+    if (!completedReminders.length) {
+      res.status(404).json({ message: "No completed reminders found" });
+      return;
+    }
+
+    res.status(200).json(completedReminders);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+// GET /api/reminders/incomplete - Get only incomplete reminders for the logged-in user
+router.get('/incomplete', protect, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const incompleteReminders = await Reminder.find({
+      userId: req.user._id,
+      isCompleted: false,
+    });
+
+    if (!incompleteReminders.length) {
+      res.status(404).json({ message: "No incomplete reminders found" });
+      return;
+    }
+
+    res.status(200).json(incompleteReminders);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+
 
 export default router;
