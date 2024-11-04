@@ -241,6 +241,28 @@ router.get('/incomplete', protect, async (req: AuthenticatedRequest, res: Respon
   }
 });
 
+// DELETE /api/reminders/:id - Delete a specific reminder
+router.delete('/:id', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { id } = req.params;
+
+  try {
+    const reminder = await Reminder.findOneAndDelete({
+      _id: id,
+      userId: req.user._id,
+    });
+
+    if (!reminder) {
+      res.status(404).json({ message: 'Reminder not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Reminder deleted successfully' });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
 
 
 export default router;
