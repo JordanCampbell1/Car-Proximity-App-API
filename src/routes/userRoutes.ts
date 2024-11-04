@@ -105,4 +105,35 @@ router.get('/profile', protect, async (req: AuthenticatedRequest, res: Response)
   }
 });
 
+// PATCH /api/users/change-password - Change password for the logged-in user
+router.patch('/change-password', protect, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    // Find the authenticated user
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    // Check if current password is correct
+    if (!(await user.matchPassword(currentPassword))) {
+      res.status(401).json({ message: 'Current password is incorrect' });
+      return;
+    }
+
+    // Update password with the new one (will be hashed)
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+});
+
 export default router;
