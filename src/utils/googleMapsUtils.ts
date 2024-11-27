@@ -25,10 +25,20 @@ export const getDirections = async (origin: string, destination: string) => {
             params: {
                 origin,
                 destination,
+                mode: 'driving',
                 key: process.env.GOOGLE_MAPS_API_KEY,
             },
         });
-        return response.data.routes[0];
+        
+        // Log the full response to debug
+        console.log('Full directions response:', JSON.stringify(response.data, null, 2));
+        
+        if (!response.data.routes || response.data.routes.length === 0) {
+            throw new Error('No routes found');
+        }
+        
+        // Return the complete first route with all its details
+        return response.data.routes[0].legs[0];
     } catch (error) {
         console.error('Error fetching directions:', error);
         throw new Error('Failed to get directions');
