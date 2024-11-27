@@ -8,6 +8,8 @@ import userRoutes from './routes/userRoutes';
 import parkedHistoryRoutes from './routes/parkedHistoryRoutes'
 import DrivingHistoryRoutes from './routes/drivingHistoryRoutes';
 import voiceRoutes from './routes/voiceRoutes';
+import smartSuggestionsRoute from './routes/smartSuggestionsRoute'
+import suggestionDirectionRoutes from './routes/suggestionDirectionRoutes'
 
 config();
 
@@ -24,7 +26,9 @@ const startServer = async (): Promise<void> => {
   app.use('/api/reminders', reminderRoutes);
   app.use('/api/parkedHistory', parkedHistoryRoutes);
   app.use('/api/drivingHistory', DrivingHistoryRoutes);
+  app.use('/api/smartSuggestion',smartSuggestionsRoute);
   app.use('/api/voice', voiceRoutes);
+  app.use('/api/suggestionDirection',suggestionDirectionRoutes);
 
   // Health check route
   app.get('/health', (req, res) => {
